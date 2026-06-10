@@ -1,6 +1,6 @@
 [server]
 # Permite rodar sem abrir browser automaticamente (útil em produção)
-headless = false
+headless = true
 
 [theme]
 primaryColor     = "#2ecc71"
