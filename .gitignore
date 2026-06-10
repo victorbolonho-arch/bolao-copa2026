@@ -1,0 +1,33 @@
+# ─── Credenciais — NUNCA commitar ─────────────────────────────────────────────
+.streamlit/secrets.toml
+*.json
+service_account*.json
+
+# ─── Dados de usuários (palpites e resultados) ────────────────────────────────
+data/bolao_palpites.csv
+data/resultados_reais.csv
+data/jogos_extras.csv
+
+# ─── Python ───────────────────────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+.venv/
+*.egg-info/
+dist/
+build/
+
+# ─── Jupyter ──────────────────────────────────────────────────────────────────
+.ipynb_checkpoints/
+
+# ─── Dados de treino / processados grandes (não necessários para o app web) ───
+data/raw/
+data/interim/
+data/backtest/
+*.parquet
+
+# ─── Modelos serializados (grandes; regenerar com o pipeline) ─────────────────
+models/
+
+# ─── OS ───────────────────────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
