@@ -109,7 +109,7 @@ def tn(name: str) -> str:
     return TRADUZ.get(name, name)
 
 
-def parse_placar(s: str | float) -> tuple[int, int]:
+def parse_placar(s) -> tuple[int, int]:
     """
     Extrai gols do formato '2-0(15%)'.
     Retorna (0, 0) se a string estiver ausente ou malformada.
