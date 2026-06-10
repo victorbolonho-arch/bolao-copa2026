@@ -10,8 +10,14 @@ import streamlit as st
 import pandas as pd
 from pathlib import Path
 from datetime import datetime
-from google.oauth2.service_account import Credentials
-import gspread
+
+# Imports opcionais: se gspread não estiver disponível, o app cai para CSV local.
+try:
+    from google.oauth2.service_account import Credentials
+    import gspread
+    _GSPREAD_OK = True
+except ImportError:
+    _GSPREAD_OK = False
 
 # ─── Paths para o fallback local ─────────────────────────────────────────────
 ROOT           = Path(__file__).resolve().parent.parent
@@ -38,9 +44,11 @@ _RESULTADOS_HDR = ["jogo_id", "gols_home_real", "gols_away_real"]
 def _use_gsheets() -> bool:
     """
     Verifica se as credenciais do GSheets estão configuradas em st.secrets.
-    O try/except é necessário porque st.secrets levanta FileNotFoundError
-    em ambiente local sem o arquivo .streamlit/secrets.toml.
+    Retorna False se gspread não estiver instalado ou se secrets não tiver a chave.
+    O try/except cobre o FileNotFoundError que st.secrets lança sem secrets.toml.
     """
+    if not _GSPREAD_OK:
+        return False
     try:
         return "gsheets" in st.secrets
     except Exception:

@@ -324,12 +324,32 @@ with st.sidebar:
     st.divider()
 
     # Indicador de backend ativo
-    st.caption(f"Backend: **{backend_label()}**")
+    _lbl = backend_label()
+    st.caption(f"Backend: **{_lbl}**")
+    if "local" in _lbl:
+        st.warning("⚠️ Rodando com armazenamento local. Configure as credenciais do Google para produção.")
 
-    # Modo administrador — sem senha (contexto de amigos, prazo apertado)
-    admin = st.toggle("🔧 Modo administrador")
-    if admin:
-        st.caption("Use com responsabilidade: este modo insere resultados reais e afeta o ranking de todos.")
+    # Admin protegido por senha — expander discreto, sem toggle visível
+    with st.expander("⚙️ Administrador"):
+        if st.session_state.get("is_admin"):
+            st.success("Modo admin ativo")
+            if st.button("Sair do modo admin", key="admin_logout", use_container_width=True):
+                st.session_state["is_admin"] = False
+                st.rerun()
+        else:
+            senha = st.text_input("Senha", type="password", key="admin_pw")
+            if st.button("Entrar", key="admin_login", use_container_width=True):
+                try:
+                    correta = st.secrets["ADMIN_PASSWORD"]
+                except Exception:
+                    import sys
+                    print("[DEV] ADMIN_PASSWORD ausente em secrets.toml — usando 'admin123'.", file=sys.stderr)
+                    correta = "admin123"
+                if senha == correta:
+                    st.session_state["is_admin"] = True
+                    st.rerun()
+                else:
+                    st.error("Acesso negado.")
 
 
 # ══════════════════════════════════════════════════════════════════════════════════
@@ -706,7 +726,7 @@ with tab_meus:
 # PAINEL DO ADMINISTRADOR (condicional)
 # ══════════════════════════════════════════════════════════════════════════════════
 
-if admin:
+if st.session_state.get("is_admin", False):
     st.divider()
     st.header("🔧 Administrador")
 
